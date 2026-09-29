@@ -1,0 +1,321 @@
+/**
+ * panel.css - Styles for the on-page injected YT Comment Categorizer panel.
+ *
+ * DESIGN RATIONALE:
+ * - Inherits YouTube Native Design Tokens: Uses CSS custom properties (--yt-spec-*)
+ *   with dark/light fallbacks to match YouTube's current theme seamlessly.
+ * - Non-Intrusive Layout Flow: Positioned within the document flow inside #comments,
+ *   never fixed/floating over video playback, sidebar recommendations, or player controls.
+ * - Responsive Breakpoints: Flexbox grid that gracefully adjusts across wide monitors,
+ *   theater mode, and narrow viewport widths (< 650px).
+ */
+
+#yt-comment-categorizer-panel {
+  box-sizing: border-box;
+  width: 100%;
+  margin: 16px 0 24px 0;
+  padding: 16px 18px;
+  background-color: var(--yt-spec-brand-background-primary, #0f0f0f);
+  color: var(--yt-spec-text-primary, #f1f1f1);
+  border: 1px solid var(--yt-spec-10-percent-layer, rgba(255, 255, 255, 0.12));
+  border-radius: 12px;
+  font-family: "Roboto", "YouTube Sans", -apple-system, BlinkMacSystemFont, "Segoe UI", Arial, sans-serif;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.2);
+  transition: all 0.25s ease-in-out;
+  position: relative;
+  z-index: 1;
+}
+
+/* Light mode support when YouTube is in light theme */
+html[light] #yt-comment-categorizer-panel,
+html:not([dark]) #yt-comment-categorizer-panel {
+  background-color: #ffffff;
+  color: #0f0f0f;
+  border-color: rgba(0, 0, 0, 0.1);
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.08);
+}
+
+#yt-comment-categorizer-panel * {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+/* Header */
+.ytcc-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding-bottom: 12px;
+  border-bottom: 1px solid var(--yt-spec-10-percent-layer, rgba(255, 255, 255, 0.1));
+}
+
+html[light] .ytcc-header,
+html:not([dark]) .ytcc-header {
+  border-bottom-color: rgba(0, 0, 0, 0.08);
+}
+
+.ytcc-title-area {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.ytcc-logo {
+  font-size: 20px;
+}
+
+.ytcc-title {
+  font-size: 15px;
+  font-weight: 600;
+  letter-spacing: 0.1px;
+}
+
+.ytcc-total-badge {
+  font-size: 11px;
+  font-weight: 600;
+  padding: 3px 9px;
+  border-radius: 12px;
+  background-color: var(--yt-spec-badge-chip-background, rgba(255, 255, 255, 0.12));
+  color: var(--yt-spec-text-secondary, #aaaaaa);
+}
+
+html[light] .ytcc-total-badge,
+html:not([dark]) .ytcc-total-badge {
+  background-color: rgba(0, 0, 0, 0.06);
+  color: #606060;
+}
+
+.ytcc-controls {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.ytcc-btn {
+  background: transparent;
+  border: 1px solid var(--yt-spec-10-percent-layer, rgba(255, 255, 255, 0.15));
+  border-radius: 6px;
+  color: var(--yt-spec-text-primary, #f1f1f1);
+  padding: 5px 10px;
+  font-size: 12px;
+  font-weight: 500;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  transition: background-color 0.15s ease, border-color 0.15s ease;
+}
+
+html[light] .ytcc-btn,
+html:not([dark]) .ytcc-btn {
+  border-color: rgba(0, 0, 0, 0.15);
+  color: #0f0f0f;
+}
+
+.ytcc-btn:hover {
+  background-color: var(--yt-spec-badge-chip-background, rgba(255, 255, 255, 0.1));
+  border-color: rgba(255, 255, 255, 0.3);
+}
+
+html[light] .ytcc-btn:hover,
+html:not([dark]) .ytcc-btn:hover {
+  background-color: rgba(0, 0, 0, 0.05);
+  border-color: rgba(0, 0, 0, 0.3);
+}
+
+/* Status message when waiting for comments */
+.ytcc-status {
+  padding: 10px 0 2px 0;
+  font-size: 12px;
+  color: var(--yt-spec-text-secondary, #aaaaaa);
+  font-style: italic;
+}
+
+/* Category Grid */
+.ytcc-categories-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+  gap: 10px;
+  margin-top: 14px;
+}
+
+/* Category Card / Button */
+.ytcc-cat-card {
+  background-color: var(--yt-spec-badge-chip-background, rgba(255, 255, 255, 0.05));
+  border: 1px solid var(--yt-spec-10-percent-layer, rgba(255, 255, 255, 0.08));
+  border-radius: 8px;
+  padding: 10px 12px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  text-align: left;
+  color: inherit;
+  font: inherit;
+  transition: background-color 0.15s ease, border-color 0.15s ease, transform 0.1s ease;
+  user-select: none;
+}
+
+html[light] .ytcc-cat-card,
+html:not([dark]) .ytcc-cat-card {
+  background-color: rgba(0, 0, 0, 0.03);
+  border-color: rgba(0, 0, 0, 0.08);
+}
+
+.ytcc-cat-card:hover {
+  background-color: rgba(255, 255, 255, 0.1);
+  border-color: rgba(255, 255, 255, 0.2);
+}
+
+html[light] .ytcc-cat-card:hover,
+html:not([dark]) .ytcc-cat-card:hover {
+  background-color: rgba(0, 0, 0, 0.06);
+  border-color: rgba(0, 0, 0, 0.2);
+}
+
+.ytcc-cat-card.active {
+  background-color: rgba(255, 255, 255, 0.14);
+  border-color: #3ea6ff;
+  box-shadow: 0 0 0 1px #3ea6ff;
+}
+
+html[light] .ytcc-cat-card.active,
+html:not([dark]) .ytcc-cat-card.active {
+  background-color: rgba(6, 95, 212, 0.08);
+  border-color: #065fd4;
+  box-shadow: 0 0 0 1px #065fd4;
+}
+
+.ytcc-cat-label {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  font-size: 13px;
+  font-weight: 500;
+}
+
+.ytcc-cat-count {
+  font-size: 11px;
+  font-weight: 700;
+  padding: 2px 7px;
+  border-radius: 10px;
+  color: #ffffff;
+}
+
+/* Category Badge Colors */
+.badge-questions { background-color: #3ea6ff; }
+.badge-suggestions { background-color: #f9ab00; color: #111111; }
+.badge-feedback { background-color: #bb86fc; color: #111111; }
+.badge-praise { background-color: #2ba640; }
+.badge-spam { background-color: #ff4e45; }
+.badge-other { background-color: #717171; }
+
+/* Snippets Section */
+.ytcc-snippets-drawer {
+  margin-top: 14px;
+  padding: 12px;
+  background-color: var(--yt-spec-badge-chip-background, rgba(0, 0, 0, 0.25));
+  border: 1px solid var(--yt-spec-10-percent-layer, rgba(255, 255, 255, 0.08));
+  border-radius: 8px;
+  display: none;
+}
+
+html[light] .ytcc-snippets-drawer,
+html:not([dark]) .ytcc-snippets-drawer {
+  background-color: rgba(0, 0, 0, 0.03);
+  border-color: rgba(0, 0, 0, 0.08);
+}
+
+.ytcc-snippets-drawer.open {
+  display: block;
+}
+
+.ytcc-snippets-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 10px;
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--yt-spec-text-secondary, #aaaaaa);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.ytcc-snippets-list {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  max-height: 180px;
+  overflow-y: auto;
+  padding-right: 4px;
+}
+
+.ytcc-snippet-item {
+  font-size: 12px;
+  line-height: 1.45;
+  color: var(--yt-spec-text-primary, #e2e2e2);
+  background-color: rgba(255, 255, 255, 0.05);
+  padding: 8px 12px;
+  border-radius: 6px;
+  border-left: 3px solid #3ea6ff;
+  word-break: break-word;
+}
+
+html[light] .ytcc-snippet-item,
+html:not([dark]) .ytcc-snippet-item {
+  background-color: #ffffff;
+  color: #212121;
+  border-left-color: #065fd4;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+}
+
+.ytcc-snippet-empty {
+  font-size: 12px;
+  font-style: italic;
+  color: var(--yt-spec-text-secondary, #aaaaaa);
+  padding: 6px 0;
+}
+
+/* Collapsed State */
+#yt-comment-categorizer-panel.collapsed .ytcc-categories-grid,
+#yt-comment-categorizer-panel.collapsed .ytcc-snippets-drawer,
+#yt-comment-categorizer-panel.collapsed .ytcc-status {
+  display: none !important;
+}
+
+#yt-comment-categorizer-panel.collapsed .ytcc-header {
+  border-bottom: none;
+  padding-bottom: 0;
+}
+
+/* Custom Scrollbar for Snippets */
+.ytcc-snippets-list::-webkit-scrollbar {
+  width: 4px;
+}
+
+.ytcc-snippets-list::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.ytcc-snippets-list::-webkit-scrollbar-thumb {
+  background: rgba(255, 255, 255, 0.2);
+  border-radius: 4px;
+}
+
+html[light] .ytcc-snippets-list::-webkit-scrollbar-thumb,
+html:not([dark]) .ytcc-snippets-list::-webkit-scrollbar-thumb {
+  background: rgba(0, 0, 0, 0.2);
+}
+
+/* Responsive adjustments */
+@media (max-width: 650px) {
+  .ytcc-categories-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+  
+  .ytcc-title {
+    font-size: 13px;
+  }
+}
